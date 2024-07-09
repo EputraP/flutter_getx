@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 
 void main() {
   runApp(MyApp());
@@ -8,7 +9,52 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      home: HomePage(),
+      home: HomePageStateless(),
+    );
+  }
+}
+
+class HomePageStateless extends StatelessWidget {
+  final countC = Get.put(CounterController());
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(
+        actions: [
+          IconButton(
+            onPressed: () => Navigator.of(context).push(
+              MaterialPageRoute(
+                builder: (context) => OtherPage(),
+              ),
+            ),
+            icon: Icon(Icons.refresh),
+          )
+        ],
+      ),
+      body: Center(
+        child: CountWidgetStatless(),
+      ),
+      floatingActionButton: FloatingActionButton(
+        onPressed: () {
+          countC.add();
+        },
+      ),
+    );
+  }
+}
+
+class CountWidgetStatless extends StatelessWidget {
+  // final countC = Get.find<CounterController>();
+  @override
+  Widget build(BuildContext context) {
+    return GetBuilder<CounterController>(
+      // life cycle widget adad di get builder doang, dia GetX dan Obx gk ada
+      initState: (_) => print("init"),
+      didChangeDependencies: (_) => print("didChangeDependencies"),
+      didUpdateWidget: (oldWidget, state) => print("didUpdateWidget"),
+      dispose: (_) => print("dispose"),
+      builder: (c) => Text('Angka: ${c.count}'),
     );
   }
 }
@@ -27,12 +73,13 @@ class _HomePageState extends State<HomePage> {
       appBar: AppBar(
         actions: [
           IconButton(
-              onPressed: () => Navigator.of(context).pushReplacement(
-                    MaterialPageRoute(
-                      builder: (context) => OtherPage(),
-                    ),
-                  ),
-              icon: Icon(Icons.refresh))
+            onPressed: () => Navigator.of(context).pushReplacement(
+              MaterialPageRoute(
+                builder: (context) => OtherPage(),
+              ),
+            ),
+            icon: Icon(Icons.refresh),
+          )
         ],
       ),
       body: Center(
@@ -98,7 +145,20 @@ class OtherPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(),
+      appBar: AppBar(
+        title: const Text("Other Page"),
+      ),
     );
   }
 }
+
+class CounterController extends GetxController {
+  var count = 0;
+
+  void add() {
+    count++;
+    update();
+  }
+}
+
+class TextController extends GetxController {}
