@@ -8,7 +8,7 @@ void main() {
 class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
+    return GetMaterialApp(
       home: HomePageStateless(),
     );
   }
@@ -23,11 +23,16 @@ class HomePageStateless extends StatelessWidget {
       appBar: AppBar(
         actions: [
           IconButton(
-            onPressed: () => Navigator.of(context).push(
-              MaterialPageRoute(
-                builder: (context) => OtherPage(),
-              ),
+            // ini kalo balik ke home controllernya ntar dihapus dari memory
+            onPressed: () => Get.to(
+              () => OtherPage(),
             ),
+            //kalo pakai page route material page route pas ganti page controllernya gk ke clear, harus di clear pakai dispose
+            // Navigator.of(context).push(
+            //   MaterialPageRoute(
+            //     builder: (context) => OtherPage(),
+            //   ),
+            // ),
             icon: Icon(Icons.refresh),
           )
         ],
@@ -142,11 +147,15 @@ class _CountWidgetState extends State<CountWidget> {
 }
 
 class OtherPage extends StatelessWidget {
+  final textC = Get.put(TextController());
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
         title: const Text("Other Page"),
+      ),
+      body: TextField(
+        controller: textC.myC,
       ),
     );
   }
@@ -161,4 +170,6 @@ class CounterController extends GetxController {
   }
 }
 
-class TextController extends GetxController {}
+class TextController extends GetxController {
+  final myC = TextEditingController();
+}
